@@ -32,20 +32,19 @@ Next.js 16, TypeScript, React 19, CSS designed with shadcn-style composable prim
 
 ## AI design
 
-`POST /api/ask` validates the meeting ID and question, sends the selected meeting transcript directly to OpenAI when `OPENAI_API_KEY` is configured, and requires structured source IDs in the provider response. Requests are time-bounded and provider failures fall back to a clearly labelled deterministic transcript answer with source excerpts/timestamps. This avoids presenting fabricated AI as live output when a key is absent or a provider fails.
+Ask AI runs entirely in the browser using a clearly labelled deterministic, transcript-grounded fallback with source excerpts and timestamps. It never presents a live model response, never sends meeting data to a provider, and requires no API key.
 
 ## Local setup
 
-1. Copy `.env.example` to `.env.local` and optionally provide `DATABASE_URL` and `OPENAI_API_KEY`.
-2. `npm install`
-3. `npm run dev`
-4. Open `http://localhost:3000`
+1. `npm install`
+2. `npm run dev`
+3. Open `http://localhost:3000`
 
 Validate with `npm run typecheck`, `npm run lint`, and `npm run build`.
 
 ## Deployment
 
-Deploy to Vercel or any Node-compatible HTTPS host. Add `DATABASE_URL` for managed Postgres and `OPENAI_API_KEY` only if the provider adapter is enabled. The seeded/local mode requires no secret and works immediately for reviewers.
+`npm run build` generates a fully static `out/` directory. Deploy that directory to Render Static Site or any HTTPS static host; no server, database, or environment variables are required.
 
 ## Deliberate product decisions
 
