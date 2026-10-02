@@ -14,7 +14,7 @@ const make = (id: string, title: string, category: string, date: string, status:
     { id: `${id}-s4`, speaker: "Maya Chen", time: "16:20", text: `Let's decide: staged rollout, weekly review, and Maya owns the brief while Eli confirms measurement.` },
     { id: `${id}-s5`, speaker: "Sofia Patel", time: "24:08", text: `I can recruit six customers for the pilot and capture their feedback in the same workspace.` },
     { id: `${id}-s6`, speaker: "Eli Turner", time: "34:51", text: `That gives us enough signal to decide whether to expand. I am comfortable with this timeline.` }
-  ], highlights: id === "product" ? [{ id: "h1", segmentId: "product-s4", note: "Final rollout decision" }] : []
+  ], highlights: id === "product" ? [{ id: "h1", meetingId: "product", segmentId: "product-s4", timestamp: "16:20", speaker: "Maya Chen", text: "Let's decide: staged rollout, weekly review, and Maya owns the brief while Eli confirms measurement.", note: "Final rollout decision", createdAt: "2026-10-01T11:18:00.000Z" }] : []
 });
 
 export const seedMeetings: Meeting[] = [
