@@ -7,7 +7,7 @@
           {
             "type": "command",
             "command": "python .codex/capture_turn.py prompt",
-            "commandWindows": "python \".codex\\capture_turn.py\" prompt",
+            "commandWindows": "chcp 65001 >nul & python -X utf8 \".codex\\capture_turn.py\" prompt",
             "timeout": 10
           }
         ]
@@ -19,7 +19,7 @@
           {
             "type": "command",
             "command": "python .codex/capture_turn.py response",
-            "commandWindows": "python \".codex\\capture_turn.py\" response",
+            "commandWindows": "chcp 65001 >nul & python -X utf8 \".codex\\capture_turn.py\" response",
             "timeout": 10
           }
         ]
