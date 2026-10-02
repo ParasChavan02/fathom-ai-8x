@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Check, ChevronLeft, Clock3, Copy, FileText, Highlighter, LayoutDashboard, MessageSquareText, Search, Send, Share2, Sparkles, Users, X, Trash2, RotateCcw } from "lucide-react";
 import { seedMeetings } from "@/lib/meetings";
 import { Meeting, Segment } from "@/lib/types";
-import type { MeetingAnswer } from "@/lib/ai";
+import { fallbackMeetingAnswer, type MeetingAnswer } from "@/lib/meeting-fallback";
 type SearchResult = { meeting: Meeting; segment?: Segment; kind: "Meeting" | "Transcript" | "Decision" | "Action item"; excerpt: string };
 
 export type RelayView = "overview" | "meetings" | "search" | "actions";
@@ -22,7 +22,7 @@ export function RelayApp({ initialView }: { initialView: RelayView }) {
  ]); },[meetings,query]);
  const openResult=(r:SearchResult)=>{setSelectedId(r.meeting.id);setSelectedSegment(r.segment?.id??null);setQuery("");};
  const saveHighlight=(s:Segment)=>{if(!meeting||meeting.highlights.some(h=>h.segmentId===s.id)){setNotice("This moment is already highlighted");return;} persist(meetings.map(m=>m.id===meeting.id?{...m,highlights:[...m.highlights,{id:crypto.randomUUID(),meetingId:meeting.id,segmentId:s.id,timestamp:s.time,speaker:s.speaker,text:s.text,createdAt:new Date().toISOString()}]}:m));setNotice("Highlight saved");};
- const askMeeting=async(question=ask)=>{if(!meeting)return; if(question.trim().length<3){setAskError("Ask a question with at least 3 characters.");return;}setAsk(question);setAsking(true);setAskError("");setAnswer(null);try{const res=await fetch("/api/ask",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({meetingId:meeting.id,question})});const data=await res.json();if(!res.ok)throw new Error(data.error||"Unable to answer right now.");setAnswer(data);if(data.notice)setNotice(data.notice);}catch(e){setAskError(e instanceof Error?e.message:"Unable to answer right now.");}finally{setAsking(false);}};
+ const askMeeting=async(question=ask)=>{if(!meeting)return; if(question.trim().length<3){setAskError("Ask a question with at least 3 characters.");return;}setAsk(question);setAsking(true);setAskError("");setAnswer(null);try{await new Promise(resolve=>setTimeout(resolve,160));setAnswer(fallbackMeetingAnswer(meeting,question));}catch{setAskError("Unable to answer right now.");}finally{setAsking(false);}};
  if (meeting) return <main className="shell"><Sidebar active="meetings"/><section className="workspace">
   <header className="topbar"><button className="back" onClick={()=>setSelectedId(null)}><ChevronLeft size={18}/> Meetings</button><div className="header-actions"><span className="status"><i/> {meeting.status === "completed" ? "Processed" : "Scheduled"}</span><button className="button" onClick={()=>setShare(true)}><Share2 size={16}/> Share</button></div></header>
   <div className="meeting-head"><div><p className="eyebrow">{meeting.category}</p><h1>{meeting.title}</h1><div className="meta"><span><Clock3 size={15}/>{meeting.time}</span><span>{meeting.duration}</span><span><Users size={15}/>{meeting.participants.length} attendees</span></div></div><div className="avatars">{meeting.participants.map(p=><span title={p.name} className={`avatar ${p.tone}`} key={p.name}>{p.initials}</span>)}</div></div>
