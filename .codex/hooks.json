@@ -1,0 +1,29 @@
+{
+  "description": "Capture user prompts and final assistant responses for the 8x assignment.",
+  "hooks": {
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python .codex/capture_turn.py prompt",
+            "commandWindows": "python \".codex\\capture_turn.py\" prompt",
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python .codex/capture_turn.py response",
+            "commandWindows": "python \".codex\\capture_turn.py\" response",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}
